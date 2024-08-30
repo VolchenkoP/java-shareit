@@ -16,9 +16,6 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
@@ -37,7 +34,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDTO> searchItemByText(@RequestParam(defaultValue = "", required = false) String text) {
+    public List<ItemDTO> searchItemByText(@RequestParam(defaultValue = "") String text) {
         return service.findItemsByText(text);
     }
 

@@ -10,6 +10,7 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.mapper.UserMapperImpl;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -19,15 +20,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
+    private final ItemMapper itemMapper;
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Override
     public ItemDTO create(Long userId, ItemDTO itemDTO) {
         log.info("Создание нового объекта проката пользователем с Id: {}", userId);
         userService.userExistById(userId);
-        Item item = ItemMapper.fromDTO(itemDTO);
-        item.setOwner(UserMapper.fromDTO(userService.findUserById(userId)));
-        return ItemMapper.toDTO(repository.create(item));
+        Item item = itemMapper.fromDTO(itemDTO);
+        item.setOwner(userMapper.fromDTO(userService.findUserById(userId)));
+        return itemMapper.toDTO(repository.create(item));
     }
 
     @Override
@@ -36,16 +39,16 @@ public class ItemServiceImpl implements ItemService {
         userService.userExistById(userId);
         isItemExistByItemId(itemId);
         isOwner(userId, itemId);
-        Item updatedItem = ItemMapper.fromDTO(itemDTO);
+        Item updatedItem = itemMapper.fromDTO(itemDTO);
         updatedItem.setId(itemId);
-        return ItemMapper.toDTO(repository.update(updatedItem));
+        return itemMapper.toDTO(repository.update(updatedItem));
     }
 
     @Override
     public ItemDTO findItemByItemId(Long itemId) {
         log.info("Поиск объекта проката с Id: {}", itemId);
         isItemExistByItemId(itemId);
-        return ItemMapper.toDTO(repository.findItemByItemId(itemId));
+        return itemMapper.toDTO(repository.findItemByItemId(itemId));
     }
 
     @Override
@@ -53,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
         log.info("Поиск объектов проката по пользователю с Id: {}", userId);
         userService.userExistById(userId);
         return repository.findItemsByUserId(userId).stream()
-                .map(ItemMapper::toDTO)
+                .map(itemMapper::toDTO)
                 .toList();
     }
 
@@ -64,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
             return List.of();
         }
         return repository.findItemByText(text).stream()
-                .map(ItemMapper::toDTO)
+                .map(itemMapper::toDTO)
                 .toList();
     }
 

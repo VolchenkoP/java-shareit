@@ -1,12 +1,11 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDTO;
-import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.mapper.UserMapperImpl;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -14,19 +13,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository repository;
     private final Map<Long, String> emails = new HashMap<>();
+    private final UserMapperImpl mapper;
 
     @Override
     public UserDTO create(UserDTO userDTO) {
         log.info("Создание нового пользователя");
-        User user = UserMapper.fromDTO(userDTO);
+        User user = mapper.fromDTO(userDTO);
         userEmailNotDuplicate(userDTO);
-        UserDTO createdUser = UserMapper.toDTO(repository.create(user));
+        UserDTO createdUser = mapper.toDTO(repository.create(user));
         emails.put(createdUser.getId(), createdUser.getEmail());
         return createdUser;
     }
@@ -35,14 +35,14 @@ public class UserServiceImpl implements UserService {
     public UserDTO findUserById(Long userDTOId) {
         log.info("Поиск пользователя с Id: {}", userDTOId);
         userExistById(userDTOId);
-        return UserMapper.toDTO(repository.getUserById(userDTOId));
+        return mapper.toDTO(repository.getUserById(userDTOId));
     }
 
     @Override
     public List<UserDTO> findAll() {
         log.info("Поиск всех пользователей");
         return repository.findAll().stream()
-                .map(UserMapper::toDTO)
+                .map(mapper::toDTO)
                 .toList();
     }
 
@@ -58,11 +58,11 @@ public class UserServiceImpl implements UserService {
                 emails.put(userId, userDTO.getEmail());
             }
         }
-        if (userDTO.getName() != null) {
+        if (userDTO.getName() != null && !userDTO.getName().isEmpty()) {
             updateUser.setName(userDTO.getName());
         }
         log.info("Обновление пользователя с Id: {} прошло успешно", userId);
-        return UserMapper.toDTO(repository.update(updateUser));
+        return mapper.toDTO(repository.update(updateUser));
 
     }
 
