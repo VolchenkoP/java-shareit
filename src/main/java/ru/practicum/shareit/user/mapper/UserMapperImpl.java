@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.model.User;
 
 @Component
 @Mapper(componentModel = "Spring")
-public class UserMapperImpl implements UserMapper{
+public class UserMapperImpl implements UserMapper {
 
     public UserDTO toDTO(User user) {
         return UserDTO.builder()

@@ -10,7 +10,6 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.mapper.UserMapperImpl;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;

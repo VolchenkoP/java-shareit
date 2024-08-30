@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 
 @Component
 @Mapper(componentModel = "spring")
-public class ItemMapperImpl implements ItemMapper{
+public class ItemMapperImpl implements ItemMapper {
 
     public ItemDTO toDTO(Item item) {
         return ItemDTO.builder()
