@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
         userEmailNotDuplicate(userDTO);
         UserDTO createdUser = mapper.toDTO(repository.create(user));
         emails.put(createdUser.getId(), createdUser.getEmail());
+        log.info("Новый пользователь успешно создан с id: {}", createdUser.getId());
         return createdUser;
     }
 
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findUserById(Long userDTOId) {
         log.info("Поиск пользователя с Id: {}", userDTOId);
         userExistById(userDTOId);
+        log.info("Пользователь с  id: {} успешно найден", userDTOId);
         return mapper.toDTO(repository.getUserById(userDTOId));
     }
 

@@ -29,6 +29,7 @@ public class ItemServiceImpl implements ItemService {
         userService.userExistById(userId);
         Item item = itemMapper.fromDTO(itemDTO);
         item.setOwner(userMapper.fromDTO(userService.findUserById(userId)));
+        log.info("Создание нового объекта проката прошло успешно, id объекта: {}", item.getId());
         return itemMapper.toDTO(repository.create(item));
     }
 
@@ -40,6 +41,7 @@ public class ItemServiceImpl implements ItemService {
         isOwner(userId, itemId);
         Item updatedItem = itemMapper.fromDTO(itemDTO);
         updatedItem.setId(itemId);
+        log.info("Обновление данных по объекту проката с Id: {} прошло успешно", itemId);
         return itemMapper.toDTO(repository.update(updatedItem));
     }
 
