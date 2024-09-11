@@ -11,14 +11,9 @@ import ru.practicum.shareit.user.model.User;
 @Builder
 public class Item {
     private Long id;
-    @NotNull
-    @NotBlank
     private String name;
-    @NotBlank
     private String description;
-    @NotNull
     private Boolean available;
-    @NotNull
     private User owner;
     private ItemRequest request;
 }

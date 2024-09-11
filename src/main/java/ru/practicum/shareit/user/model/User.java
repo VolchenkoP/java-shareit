@@ -9,9 +9,6 @@ import lombok.Data;
 @Builder
 public class User {
     private Long id;
-    @NotNull
     private String name;
-    @NotNull
-    @Email
     private String email;
 }

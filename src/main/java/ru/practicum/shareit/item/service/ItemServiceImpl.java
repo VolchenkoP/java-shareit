@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDTO> findItemsByText(String text) {
         log.info("Поиск объекта проката по совпадению с поисковой строкой {}", text);
-        if (text == null || text.trim().isEmpty()) {
+        if (text == null || text.isBlank()) {
             return List.of();
         }
         return repository.findItemByText(text).stream()
