@@ -39,7 +39,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO create(@Valid @RequestBody UserDTO userDTO) {
+    public UserDTO create(@Valid @RequestBody UserDTO userDTO) { // глянь this
         log.info("Создание нового пользователя");
         return service.create(userDTO);
     }

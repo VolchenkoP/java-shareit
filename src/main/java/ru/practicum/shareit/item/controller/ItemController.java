@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.config.constants.HttpHeaders;
+import ru.practicum.shareit.item.comment.dto.CommentRequestDto;
+import ru.practicum.shareit.item.comment.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.ExtendedItemDto;
 import ru.practicum.shareit.item.dto.ItemDTO;
+import ru.practicum.shareit.item.dto.ItemFromUpdateRequestDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -24,19 +29,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
-    private static final String HEADER = "X-Sharer-User-Id";
+    private static final String HEADER = HttpHeaders.USER_HEADER;
     private final ItemService service;
 
     @GetMapping
-    public List<ItemDTO> getItemsByUserId(@RequestHeader(HEADER) Long userId) {
+    public List<ExtendedItemDto> getItemsByUserId(@RequestHeader(HEADER) Long userId) {
         log.info("Получение всех объектов проката по id: {} пользователя", userId);
         return service.findItemsByUserId(userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDTO getItemDTOById(@PathVariable Long itemId) {
+    public ExtendedItemDto getItemDTOById(@RequestHeader(HEADER) Long userId,
+                                          @PathVariable Long itemId) {
         log.info("Получение объекта проката по id: {}", itemId);
-        return service.findItemByItemId(itemId);
+        return service.findItemByItemId(itemId, userId);
     }
 
     @GetMapping("/search")
@@ -49,14 +55,22 @@ public class ItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDTO create(@RequestHeader(HEADER) Long userId,
                           @Valid @RequestBody ItemDTO itemDTO) {
-        log.info("Слздание нового объекта проката пользователем с id: {}", userId);
+        log.info("Создание нового объекта проката пользователем с id: {}", userId);
         return service.create(userId, itemDTO);
     }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentResponseDto addComment(@RequestHeader(HEADER) Long userId,
+                                         @PathVariable Long itemId,
+                                         @Valid @RequestBody CommentRequestDto requestDto) {
+        return service.addComment(userId, itemId, requestDto);
+    }
+
 
     @PatchMapping("/{itemId}")
     public ItemDTO update(@RequestHeader(HEADER) Long userId,
                           @PathVariable Long itemId,
-                          @RequestBody ItemDTO itemDTO) {
+                          @RequestBody ItemFromUpdateRequestDto itemDTO) {
         log.info("Обновление объекта проката с id: {} пользователем с id: {}", itemId, userId);
         return service.update(userId, itemId, itemDTO);
     }
