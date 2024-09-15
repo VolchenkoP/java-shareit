@@ -39,6 +39,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponseDto addBooking(BookingRequestDto bookingDto, Long userId) {
+        log.info("Запрос на новое бронирование объекта пользователем с id: {}", userId);
         User booker = getUserById(userId);
         Item item = getItemById(bookingDto.getItemId());
         availableValidation(item, booker);
@@ -47,33 +48,39 @@ public class BookingServiceImpl implements BookingService {
         booking.setBooker(booker);
         booking.setItem(item);
         booking.setStatus(BookingStatus.WAITING);
-        return BookingMapper.toDto(bookingRepository.save(booking));
+        Booking savedBooking = bookingRepository.save(booking);
+        log.info("Запрос на бронирование создан с id: {}", savedBooking.getId());
+        return BookingMapper.toDto(savedBooking);
     }
 
     @Override
     @Transactional
     public BookingResponseDto bookingUpdateStatus(Long userId, Long bookingId, boolean approve) {
+        log.info("Запрос на подтверждение бронирования с id: {}", bookingId);
         Booking booking = getBookingById(bookingId);
         ownerCheck(userId, booking);
         updateStatus(booking, approve);
+        log.info("Бронирование подтверждено");
         return BookingMapper.toDto(bookingRepository.save(booking));
     }
 
     @Override
     public BookingResponseDto getBooking(Long userId, Long bookingId) {
+        log.info("Получение данных бронирования с id: {} пользователем с id: {}", bookingId, userId);
         Booking booking = getBookingById(bookingId);
-        bookerCheck(userId, booking);
-
+        accessCheck(userId, booking);
+        log.info("Данные доступны и направлены");
         return BookingMapper.toDto(booking);
     }
 
 
     @Override
     public List<BookingResponseDto> findAllByBookerId(Long userId, String state) {
+        log.info("Получение данных всех бронирований у пользователя с id: {}", userId);
         getUserById(userId);
         BookingState bookingState = getBookingStateFromRequest(state);
         List<Booking> bookings = getResultByBookerHandlerChain(userId, bookingState);
-
+        log.info("Данные всех бронирований пользователя доступны и направлены");
         return bookings.stream()
                 .map(BookingMapper::toDto)
                 .toList();
@@ -81,10 +88,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponseDto> findAllByOwnerId(Long userId, String state) {
+        log.info("Получение данных всех объектов бронированя у пользователя с id: {}", userId);
         getUserById(userId);
         BookingState bookingState = getBookingStateFromRequest(state);
         List<Booking> bookings = getResultByOwnerHandlerChain(userId, bookingState);
-
+        log.info("Данные всех объектов бронирования пользователя доступны и направлены");
         return bookings.stream()
                 .map(BookingMapper::toDto)
                 .toList();
@@ -123,8 +131,9 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void bookerCheck(Long userId, Booking booking) {
-        if (!booking.getBooker().getId().equals(userId)) {
+    private void accessCheck(Long userId, Booking booking) {
+        if (!booking.getItem().getOwner().getId().equals(userId) &&
+                !booking.getBooker().getId().equals(userId)) {
             log.error("Обращение к данным бронирования пользователем, не осуществляющим бронь");
             throw new NotFoundException("У пользователя нет доступа к данным чужого бронирвоания");
         }

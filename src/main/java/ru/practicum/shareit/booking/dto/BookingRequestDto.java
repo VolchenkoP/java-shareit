@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class BookingRequestDto {
     @NotNull
     private Long itemId;
-    @FutureOrPresent(message = "Бронирвоание не может начаться в прошлом")
+    @FutureOrPresent(message = "Бронирование не может начаться в прошлом")
     @NotNull
     private LocalDateTime start;
     @Future(message = "Завершение бронирования должно быть в будущем")

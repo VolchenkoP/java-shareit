@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.mapper.ItemMapperImpl;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
@@ -16,7 +16,7 @@ public class BookingMapper {
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .item(ItemMapperImpl.toDTO(booking.getItem()))
+                .item(ItemMapper.toDTO(booking.getItem()))
                 .booker(UserMapper.toDTO(booking.getBooker()))
                 .status(booking.getStatus())
                 .build();

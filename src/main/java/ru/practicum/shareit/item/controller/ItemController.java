@@ -33,19 +33,22 @@ public class ItemController {
     private final ItemService service;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<ExtendedItemDto> getItemsByUserId(@RequestHeader(HEADER) Long userId) {
         log.info("Получение всех объектов проката по id: {} пользователя", userId);
-        return service.findItemsByUserId(userId);
+        return service.findItemsByUser(userId);
     }
 
     @GetMapping("/{itemId}")
+    @ResponseStatus(HttpStatus.OK)
     public ExtendedItemDto getItemDTOById(@RequestHeader(HEADER) Long userId,
                                           @PathVariable Long itemId) {
         log.info("Получение объекта проката по id: {}", itemId);
-        return service.findItemByItemId(itemId, userId);
+        return service.findItemById(itemId, userId);
     }
 
     @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
     public List<ItemDTO> searchItemByText(@RequestParam(defaultValue = "") String text) {
         log.info("Поиск объектов проката по тексту: {}", text);
         return service.findItemsByText(text);
@@ -60,14 +63,17 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
     public CommentResponseDto addComment(@RequestHeader(HEADER) Long userId,
                                          @PathVariable Long itemId,
                                          @Valid @RequestBody CommentRequestDto requestDto) {
+        log.info("Добавление комментария к объекту проката с id: {} пользователем с id: {}", itemId, userId);
         return service.addComment(userId, itemId, requestDto);
     }
 
 
     @PatchMapping("/{itemId}")
+    @ResponseStatus(HttpStatus.OK)
     public ItemDTO update(@RequestHeader(HEADER) Long userId,
                           @PathVariable Long itemId,
                           @RequestBody ItemFromUpdateRequestDto itemDTO) {

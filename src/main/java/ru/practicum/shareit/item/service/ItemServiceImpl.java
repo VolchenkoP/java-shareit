@@ -18,12 +18,11 @@ import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ExtendedItemDto;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemFromUpdateRequestDto;
-import ru.practicum.shareit.item.mapper.ItemMapperImpl;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -35,7 +34,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
-    private final UserService userService;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -45,10 +43,11 @@ public class ItemServiceImpl implements ItemService {
     public ItemDTO create(Long userId, ItemDTO itemDTO) {
         log.info("Создание нового объекта проката пользователем с Id: {}", userId);
         User owner = userValidation(userId);
-        Item item = ItemMapperImpl.fromDTO(itemDTO);
+        Item item = ItemMapper.fromDTO(itemDTO);
         item.setOwner(owner);
+        Item createdItem = repository.save(item);
         log.info("Создание нового объекта проката прошло успешно, id объекта: {}", item.getId());
-        return ItemMapperImpl.toDTO(repository.save(item));
+        return ItemMapper.toDTO(createdItem);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
         userValidation(userId);
         isOwner(userId, itemId);
         Item updatedItem = itemValidation(itemId);
-        Item itemFromRequest = ItemMapperImpl.fromUpdateDto(itemDTO);
+        Item itemFromRequest = ItemMapper.fromUpdateDto(itemDTO);
         updatedItem.setId(itemId);
         if (itemFromRequest.getName() != null) {
             updatedItem.setName(itemFromRequest.getName());
@@ -70,27 +69,27 @@ public class ItemServiceImpl implements ItemService {
             updatedItem.setAvailable(itemFromRequest.getAvailable());
         }
         log.info("Обновление данных по объекту проката с Id: {} прошло успешно", itemId);
-        return ItemMapperImpl.toDTO(repository.save(updatedItem));
+        return ItemMapper.toDTO(repository.save(updatedItem));
     }
 
     @Override
-    public ExtendedItemDto findItemByItemId(Long itemId, Long userId) {
+    public ExtendedItemDto findItemById(Long itemId, Long userId) {
         log.info("Поиск объекта проката с Id: {}", itemId);
         userValidation(userId);
         Item item = itemValidation(itemId);
         List<Booking> bookings = bookingRepository.findAllByItemIdAndItemOwnerIdAndStatusNotIn(
                 itemId, userId, List.of(BookingStatus.REJECTED));
-        return ItemMapperImpl.toExtendedItemDto(item, bookings);
+        return ItemMapper.toExtendedItemDto(item, bookings);
     }
 
     @Override
-    public List<ExtendedItemDto> findItemsByUserId(Long userId) {
+    public List<ExtendedItemDto> findItemsByUser(Long userId) {
         log.info("Поиск объектов проката по пользователю с Id: {}", userId);
-        userService.userExistById(userId);
-        List<Item> items = repository.findItemsByUserId(userId);
+        userValidation(userId);
+        List<Item> items = repository.findItemsByUser(userId);
         List<Booking> bookings = bookingRepository.findAllByItemInAndStatusNotIn(
                 items, List.of(BookingStatus.REJECTED));
-        return ItemMapperImpl.toListExtendedItemDto(items, bookings);
+        return ItemMapper.toListExtendedItemDto(items, bookings);
     }
 
     @Override
@@ -99,14 +98,15 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isBlank()) {
             return Collections.emptyList();
         }
-        return repository.findItemByText(text).stream()
-                .map(ItemMapperImpl::toDTO)
+        return repository.searchText(text).stream()
+                .map(ItemMapper::toDTO)
                 .toList();
     }
 
     @Override
     @Transactional
     public CommentResponseDto addComment(Long userId, Long itemId, CommentRequestDto commentRequestDto) {
+        log.info("Добавление комментариев объекту бронирования с id: {} от пользователя {}", itemId, userId);
         Item item = itemValidation(itemId);
         User author = userValidation(userId);
 
@@ -122,8 +122,10 @@ public class ItemServiceImpl implements ItemService {
         Comment comment = CommentMapper.toEntity(commentRequestDto);
         comment.setItem(item);
         comment.setAuthor(author);
-
-        return CommentMapper.toCommentResponseDto(commentRepository.save(comment));
+        CommentResponseDto commentResponseDto = CommentMapper.toCommentResponseDto(commentRepository.save(comment));
+        log.debug("Объекту бронирования с id: {} добавлены следующие комментарии: {}", item.getId(), item.getComments());
+        log.debug("Комментарии присвоены объекту броинрования с id: {}", comment.getItem());
+        return commentResponseDto;
     }
 
     @Override
@@ -155,14 +157,9 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private Item getItemById(Long itemId) {
-        return repository.findById(itemId).orElseThrow(() ->
-                new NotFoundException("Объект проката с id: " + itemId + " не найден"));
-    }
-
     private User userValidation(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException("Пользователь не найден"));
+                new NotFoundException("Пользователь не найден по id: " + userId));
     }
 
     private Item itemValidation(Long itemId) {

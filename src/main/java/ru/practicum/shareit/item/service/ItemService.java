@@ -14,9 +14,9 @@ public interface ItemService {
 
     ItemDTO update(Long userId, Long itemId, ItemFromUpdateRequestDto itemDTO);
 
-    ExtendedItemDto findItemByItemId(Long itemId, Long userId);
+    ExtendedItemDto findItemById(Long itemId, Long userId);
 
-    List<ExtendedItemDto> findItemsByUserId(Long userId);
+    List<ExtendedItemDto> findItemsByUser(Long userId);
 
     List<ItemDTO> findItemsByText(String text);
 

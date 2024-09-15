@@ -26,12 +26,14 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> getAll() {
         log.info("Получение списка всех пользователей");
         return service.findAll();
     }
 
     @GetMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public UserDTO getUserDTOById(@PathVariable Long userId) {
         log.info("Получение данных пользователя с id: {}", userId);
         return service.findUserById(userId);
@@ -45,6 +47,7 @@ public class UserController {
     }
 
     @PatchMapping(path = "/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public UserDTO update(@PathVariable Long userId,
                           @RequestBody UserDTO userDTO) {
         log.info("Обновление данных пользователя с id: {}", userId);
