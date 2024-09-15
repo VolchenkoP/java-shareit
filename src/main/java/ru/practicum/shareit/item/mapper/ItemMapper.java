@@ -59,7 +59,7 @@ public class ItemMapper {
                 .request(item.getRequest())
                 .build();
         List<Comment> comments = new ArrayList<>(item.getComments());
-        log.debug("у объекта броинрования следующие комментарии: {}", comments);
+        log.debug("у объекта бронирования следующие комментарии: {}", comments);
         if (!CollectionUtils.isEmpty(comments)) {
             extendedItemDto.setComments(comments.stream()
                     .map(CommentMapper::toCommentResponseDto).toList());

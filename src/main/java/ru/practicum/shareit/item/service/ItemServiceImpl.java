@@ -123,7 +123,8 @@ public class ItemServiceImpl implements ItemService {
         comment.setItem(item);
         comment.setAuthor(author);
         CommentResponseDto commentResponseDto = CommentMapper.toCommentResponseDto(commentRepository.save(comment));
-        log.debug("Объекту бронирования с id: {} добавлены следующие комментарии: {}", item.getId(), item.getComments());
+        log.debug("Объекту бронирования с id: {} добавлены следующие комментарии: {}",
+                item.getId(), item.getComments());
         log.debug("Комментарии присвоены объекту броинрования с id: {}", comment.getItem());
         return commentResponseDto;
     }
