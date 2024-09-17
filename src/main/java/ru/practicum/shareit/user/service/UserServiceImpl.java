@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
             updatedUser.setName(user.getName());
         }
         log.info("Обновление пользователя с Id: {} прошло успешно", userId);
-        return userMapper.toDTO(repository.save(updatedUser));
+        return userMapper.toDTO(updatedUser);
 
     }
 

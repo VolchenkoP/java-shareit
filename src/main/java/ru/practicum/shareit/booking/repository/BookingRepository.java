@@ -45,4 +45,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                               Collection<BookingStatus> statuses);
 
     List<Booking> findAllByItemInAndStatusNotIn(Collection<Item> items, Collection<BookingStatus> statuses);
+
 }

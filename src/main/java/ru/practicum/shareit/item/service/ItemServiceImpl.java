@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
             updatedItem.setAvailable(itemFromRequest.getAvailable());
         }
         log.info("Обновление данных по объекту проката с Id: {} прошло успешно", itemId);
-        return ItemMapper.toDTO(repository.save(updatedItem));
+        return ItemMapper.toDTO(updatedItem);
     }
 
     @Override

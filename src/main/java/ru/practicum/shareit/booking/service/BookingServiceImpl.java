@@ -60,7 +60,7 @@ public class BookingServiceImpl implements BookingService {
         ownerCheck(userId, booking);
         updateStatus(booking, approve);
         log.info("Бронирование подтверждено");
-        return BookingMapper.toDto(bookingRepository.save(booking));
+        return BookingMapper.toDto(booking);
     }
 
     @Override
