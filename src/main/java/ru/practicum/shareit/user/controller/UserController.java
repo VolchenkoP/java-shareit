@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +19,7 @@ import ru.practicum.shareit.user.service.UserService;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
@@ -27,14 +27,14 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> getAll() {
+    public List<UserDTO> findAll() {
         log.info("Получение списка всех пользователей");
         return service.findAll();
     }
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getUserDTOById(@PathVariable Long userId) {
+    public UserDTO findUserById(@PathVariable Long userId) {
         log.info("Получение данных пользователя с id: {}", userId);
         return service.findUserById(userId);
     }
@@ -58,6 +58,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId) {
         log.info("Удаление пользователя с id: {}", userId);
-        service.deleteUserDTO(userId);
+        service.delete(userId);
     }
 }

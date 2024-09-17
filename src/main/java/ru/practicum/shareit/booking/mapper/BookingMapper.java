@@ -7,9 +7,11 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.util.AppMappers;
 
 @UtilityClass
 public class BookingMapper {
+    private static final UserMapper USER_MAPPER = AppMappers.USER_MAPPER;
 
     public BookingResponseDto toDto(Booking booking) {
         return BookingResponseDto.builder()
@@ -17,7 +19,7 @@ public class BookingMapper {
                 .start(booking.getStart())
                 .end(booking.getEnd())
                 .item(ItemMapper.toDTO(booking.getItem()))
-                .booker(UserMapper.toDTO(booking.getBooker()))
+                .booker(USER_MAPPER.toDTO(booking.getBooker()))
                 .status(booking.getStatus())
                 .build();
     }

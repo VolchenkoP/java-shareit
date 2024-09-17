@@ -59,10 +59,10 @@ public class ItemServiceImpl implements ItemService {
         Item updatedItem = itemValidation(itemId);
         Item itemFromRequest = ItemMapper.fromUpdateDto(itemDTO);
         updatedItem.setId(itemId);
-        if (itemFromRequest.getName() != null) {
+        if (itemFromRequest.getName() != null && !itemFromRequest.getName().isBlank()) {
             updatedItem.setName(itemFromRequest.getName());
         }
-        if (itemFromRequest.getDescription() != null) {
+        if (itemFromRequest.getDescription() != null && !itemFromRequest.getDescription().isBlank()) {
             updatedItem.setDescription(itemFromRequest.getDescription());
         }
         if (itemFromRequest.getAvailable() != null) {

@@ -34,22 +34,22 @@ public class ItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ExtendedItemDto> getItemsByUserId(@RequestHeader(HEADER) Long userId) {
+    public List<ExtendedItemDto> findItemsByUser(@RequestHeader(HEADER) Long userId) {
         log.info("Получение всех объектов проката по id: {} пользователя", userId);
         return service.findItemsByUser(userId);
     }
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ExtendedItemDto getItemDTOById(@RequestHeader(HEADER) Long userId,
-                                          @PathVariable Long itemId) {
+    public ExtendedItemDto findItemById(@RequestHeader(HEADER) Long userId,
+                                        @PathVariable Long itemId) {
         log.info("Получение объекта проката по id: {}", itemId);
         return service.findItemById(itemId, userId);
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDTO> searchItemByText(@RequestParam(defaultValue = "") String text) {
+    public List<ItemDTO> findItemsByText(@RequestParam(defaultValue = "") String text) {
         log.info("Поиск объектов проката по тексту: {}", text);
         return service.findItemsByText(text);
     }
@@ -70,7 +70,6 @@ public class ItemController {
         log.info("Добавление комментария к объекту проката с id: {} пользователем с id: {}", itemId, userId);
         return service.addComment(userId, itemId, requestDto);
     }
-
 
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)

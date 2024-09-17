@@ -19,5 +19,4 @@ public class BookingRequestDto {
     @Future(message = "Завершение бронирования должно быть в будущем")
     @NotNull
     private LocalDateTime end;
-
 }

@@ -18,6 +18,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -26,9 +27,9 @@ public class UserServiceImpl implements UserService {
         repository.findByEmail(userDTO.getEmail()).ifPresent(user -> {
             throw new RuntimeException("Пользователь с email: " + userDTO.getEmail() + "уже существует");
         });
-        User savedUser = repository.save(UserMapper.toEntity(userDTO));
+        User savedUser = repository.save(userMapper.toEntity(userDTO));
         log.info("Новый пользователь успешно создан с id: {}", savedUser.getId());
-        return UserMapper.toDTO(savedUser);
+        return userMapper.toDTO(savedUser);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         log.info("Поиск пользователя с Id: {}", userDTOId);
         userExistById(userDTOId);
         log.info("Пользователь с  id: {} успешно найден", userDTOId);
-        return UserMapper.toDTO(repository.findById(userDTOId).orElseThrow(() ->
+        return userMapper.toDTO(repository.findById(userDTOId).orElseThrow(() ->
                 new NotFoundException("Пользователь с id: " + userDTOId + " не найден")));
     }
 
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> findAll() {
         log.info("Поиск всех пользователей");
         return repository.findAll().stream()
-                .map(UserMapper::toDTO)
+                .map(userMapper::toDTO)
                 .toList();
     }
 
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO update(Long userId, UserDTO userDTO) {
         log.info("Обновление данных у пользователя с Id: {}", userId);
         userExistById(userId);
-        User user = UserMapper.toEntity(userDTO);
+        User user = userMapper.toEntity(userDTO);
         User updatedUser = repository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с id: " + userId + " не найден"));
         repository.findByEmail(user.getEmail()).ifPresent(
@@ -65,17 +66,17 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() != null && !user.getEmail().equals(updatedUser.getEmail())) {
             updatedUser.setEmail(user.getEmail());
         }
-        if (user.getName() != null && !user.getName().isEmpty()) {
+        if (user.getName() != null && !user.getName().isBlank()) {
             updatedUser.setName(user.getName());
         }
         log.info("Обновление пользователя с Id: {} прошло успешно", userId);
-        return UserMapper.toDTO(repository.save(updatedUser));
+        return userMapper.toDTO(repository.save(updatedUser));
 
     }
 
     @Override
     @Transactional
-    public void deleteUserDTO(Long userDTOId) {
+    public void delete(Long userDTOId) {
         log.info("Удаление пользователя с Id: {}", userDTOId);
         userExistById(userDTOId);
         repository.deleteById(userDTOId);

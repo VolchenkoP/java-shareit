@@ -35,7 +35,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookerHandlerChain bookerChain;
     private final OwnerHandlerChain ownerChain;
 
-
     @Override
     @Transactional
     public BookingResponseDto addBooking(BookingRequestDto bookingDto, Long userId) {
@@ -72,7 +71,6 @@ public class BookingServiceImpl implements BookingService {
         log.info("Данные доступны и направлены");
         return BookingMapper.toDto(booking);
     }
-
 
     @Override
     public List<BookingResponseDto> findAllByBookerId(Long userId, String state) {

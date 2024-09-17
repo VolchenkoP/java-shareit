@@ -40,16 +40,16 @@ public class BookingController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingResponseDto> getBookingsByBookerId(@RequestHeader(USER_HEADER) Long userId,
-                                                          @RequestParam(defaultValue = STATE) String state) {
+    public List<BookingResponseDto> findAllByBookerId(@RequestHeader(USER_HEADER) Long userId,
+                                                      @RequestParam(defaultValue = STATE) String state) {
         log.info("Запрос данных бронирования по забронировавшему пользователю с Id: {}", userId);
         return service.findAllByBookerId(userId, state);
     }
 
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingResponseDto> getBookingsByOwnerId(@RequestHeader(USER_HEADER) Long userId,
-                                                         @RequestParam(defaultValue = STATE) String state) {
+    public List<BookingResponseDto> findAllByOwnerId(@RequestHeader(USER_HEADER) Long userId,
+                                                     @RequestParam(defaultValue = STATE) String state) {
         log.info("Запрос данных бронирования по владельцу объекта бронированияId: {}", userId);
         return service.findAllByOwnerId(userId, state);
     }
@@ -64,7 +64,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
-    public BookingResponseDto updateBookingStatus(@RequestHeader(USER_HEADER) Long userId,
+    public BookingResponseDto bookingUpdateStatus(@RequestHeader(USER_HEADER) Long userId,
                                                   @PathVariable Long bookingId,
                                                   @RequestParam boolean approved) {
         log.info("Подтверждение бронирования владельцем с Id: {}", userId);

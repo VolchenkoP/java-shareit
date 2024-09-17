@@ -98,7 +98,6 @@ public class ItemMapper {
         return extendedItemDtos;
     }
 
-
     private static ExtendedItemDto.LastNextBooking getLast(List<Booking> bookingList) {
         return bookingList.stream()
                 .filter(b -> b.getStart().isBefore(LocalDateTime.now()))
