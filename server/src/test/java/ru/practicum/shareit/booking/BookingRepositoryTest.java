@@ -22,29 +22,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BookingRepositoryTest {
 
-    @Autowired
-    BookingRepository bookingRepository;
-
-    @Autowired
-    private TestEntityManager testEntityManager;
-
     private final User booker = User.builder()
             .name("John")
             .email("email@email.com")
             .build();
-
     private final User owner = User.builder()
             .name("Jenny")
             .email("email2@email.com")
             .build();
-
     private final Item item = Item.builder()
             .name("Object")
             .description("description")
             .available(true)
             .owner(owner)
             .build();
-
     private final Booking booking = Booking.builder()
             .item(item)
             .booker(booker)
@@ -52,7 +43,6 @@ class BookingRepositoryTest {
             .start(LocalDateTime.now().minusHours(1L))
             .end(LocalDateTime.now().plusDays(1L))
             .build();
-
     private final Booking pastBooking = Booking.builder()
             .item(item)
             .booker(booker)
@@ -60,7 +50,6 @@ class BookingRepositoryTest {
             .start(LocalDateTime.now().minusDays(2L))
             .end(LocalDateTime.now().minusDays(1L))
             .build();
-
     private final Booking futureBooking = Booking.builder()
             .item(item)
             .booker(booker)
@@ -68,6 +57,10 @@ class BookingRepositoryTest {
             .start(LocalDateTime.now().plusDays(1L))
             .end(LocalDateTime.now().plusDays(2L))
             .build();
+    @Autowired
+    BookingRepository bookingRepository;
+    @Autowired
+    private TestEntityManager testEntityManager;
 
     @BeforeEach
     public void init() {

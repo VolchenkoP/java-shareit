@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoToAdd;
@@ -53,7 +52,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (size <= 0) {
             throw new IllegalArgumentException("Размер списка должен быть больше 0");
         }
-        if (from <= 0){
+        if (from <= 0) {
             throw new IllegalArgumentException("Отсчет должен бначинаться не с 0");
         }
         getUserById(userId);

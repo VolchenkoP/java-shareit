@@ -38,6 +38,14 @@ public class ItemMapper {
                 .orElse(null);
     }
 
+    public static ItemOwnerDto toItemOwnerDto(Item item) {
+        return ItemOwnerDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .ownerId(item.getOwner().getId())
+                .build();
+    }
+
     public ItemDTO toDTO(Item item) {
         return ItemDTO.builder()
                 .id(item.getId())
@@ -112,13 +120,5 @@ public class ItemMapper {
             extendedItemDtos.add(extendedItemDto);
         }
         return extendedItemDtos;
-    }
-
-    public static ItemOwnerDto toItemOwnerDto(Item item) {
-        return ItemOwnerDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .ownerId(item.getOwner().getId())
-                .build();
     }
 }

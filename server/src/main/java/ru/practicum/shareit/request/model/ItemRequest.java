@@ -26,6 +26,8 @@ import java.util.Set;
 @Entity
 @Table(name = "requests")
 public class ItemRequest {
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "request")
+    Set<Item> items = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,6 +37,4 @@ public class ItemRequest {
     @ManyToOne(fetch = FetchType.EAGER)
     private User requester;
     private LocalDateTime created;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "request")
-    Set<Item> items = new HashSet<>();
 }
