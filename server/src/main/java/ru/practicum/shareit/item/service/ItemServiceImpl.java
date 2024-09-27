@@ -16,11 +16,13 @@ import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ExtendedItemDto;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemFromUpdateRequestDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -37,16 +39,22 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     private final ItemMapper itemMapper;
 
     @Override
     @Transactional
-    public ItemDTO create(Long userId, ItemDTO itemDTO) {
+    public ItemDTO create(Long userId, ItemCreateDto itemDTO) {
         log.info("Создание нового объекта проката пользователем с Id: {}", userId);
         User owner = userValidation(userId);
         Item item = itemMapper.fromDTO(itemDTO);
         item.setOwner(owner);
+        Long requestId = itemDTO.getRequestId();
+        if (requestId != null) {
+            item.setRequest(itemRequestRepository.findById(requestId).orElseThrow(() ->
+                    new NotFoundException("Запрос с id: " + requestId + " не найден")));
+        }
         Item createdItem = repository.save(item);
         log.info("Создание нового объекта проката прошло успешно, id объекта: {}", item.getId());
         return itemMapper.toDTO(createdItem);

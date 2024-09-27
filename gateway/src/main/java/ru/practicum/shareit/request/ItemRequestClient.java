@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.config.constants.ApiConstants;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoToAdd;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class ItemRequestClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> addItemRequest(long userId, ItemRequestDto itemRequestAddDto) {
+    public ResponseEntity<Object> addItemRequest(long userId, ItemRequestDtoToAdd itemRequestAddDto) {
         return post("", userId, itemRequestAddDto);
     }
 

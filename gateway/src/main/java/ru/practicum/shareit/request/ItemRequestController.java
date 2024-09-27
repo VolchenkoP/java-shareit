@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.config.constants.HttpHeaders;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoToAdd;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<Object> addItemRequest(@RequestHeader(HEADER) Long userId,
-                                                 @Valid @RequestBody ItemRequestDto itemRequestAddDto) {
+                                                 @Valid @RequestBody ItemRequestDtoToAdd itemRequestAddDto) {
         log.info("Add item request: {}, userId: {}", itemRequestAddDto, userId);
         return requestClient.addItemRequest(userId, itemRequestAddDto);
     }

@@ -18,6 +18,7 @@ import ru.practicum.shareit.config.constants.HttpHeaders;
 import ru.practicum.shareit.item.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.item.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ExtendedItemDto;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemFromUpdateRequestDto;
 import ru.practicum.shareit.item.service.ItemService;
@@ -57,7 +58,7 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDTO create(@RequestHeader(HEADER) Long userId,
-                          @Valid @RequestBody ItemDTO itemDTO) {
+                          @Valid @RequestBody ItemCreateDto itemDTO) {
         log.info("Создание нового объекта проката пользователем с id: {}", userId);
         return service.create(userId, itemDTO);
     }

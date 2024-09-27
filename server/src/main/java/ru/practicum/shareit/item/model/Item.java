@@ -13,16 +13,21 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.shareit.item.comment.model.Comment;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 @Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

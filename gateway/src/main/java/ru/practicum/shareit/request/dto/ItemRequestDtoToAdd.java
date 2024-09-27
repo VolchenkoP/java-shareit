@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemRequestDto {
+public class ItemRequestDtoToAdd {
     @NotBlank
     String description;
 }

@@ -7,8 +7,10 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.dto.ExtendedItemDto;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemFromUpdateRequestDto;
+import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
@@ -46,7 +48,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public Item fromDTO(ItemDTO itemDTO) {
+    public Item fromDTO(ItemCreateDto itemDTO) {
         return Item.builder()
                 .id(itemDTO.getId())
                 .name(itemDTO.getName())
@@ -110,5 +112,13 @@ public class ItemMapper {
             extendedItemDtos.add(extendedItemDto);
         }
         return extendedItemDtos;
+    }
+
+    public static ItemOwnerDto toItemOwnerDto(Item item) {
+        return ItemOwnerDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .ownerId(item.getOwner().getId())
+                .build();
     }
 }
