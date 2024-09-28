@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,18 +17,18 @@ class UserJsonTest {
     private static final String USER_NAME = "Oleg Gazmanov";
     private static final String USER_EMAIL = "vpole.skonem@viydu.ru";
     @Autowired
-    private JacksonTester<UserDTO> json;
+    private JacksonTester<UserDto> json;
 
     @Test
     @SneakyThrows
     void userDtoSerialize() {
-        UserDTO userDto = UserDTO.builder()
+        UserDto userDto = UserDto.builder()
                 .id(USER_ID)
                 .name(USER_NAME)
                 .email(USER_EMAIL)
                 .build();
 
-        JsonContent<UserDTO> content = json.write(userDto);
+        JsonContent<UserDto> content = json.write(userDto);
 
         assertThat(content)
                 .hasJsonPath("$.id")
@@ -46,13 +46,13 @@ class UserJsonTest {
     @Test
     @SneakyThrows
     void userDtoSerializeEmptyFields() {
-        UserDTO userDto = UserDTO.builder()
+        UserDto userDto = UserDto.builder()
                 .id(null)
                 .name("")
                 .email("")
                 .build();
 
-        JsonContent<UserDTO> content = json.write(userDto);
+        JsonContent<UserDto> content = json.write(userDto);
 
         assertThat(content)
                 .hasJsonPath("$.id")
@@ -68,7 +68,7 @@ class UserJsonTest {
     @SneakyThrows
     void userDtoDeserialize() {
         String jsonContent = "{\"id\":1,\"name\":\"Oleg Gazmanov\",\"email\":\"vpole.skonem@viydu.ru\"}";
-        UserDTO userDto = json.parseObject(jsonContent);
+        UserDto userDto = json.parseObject(jsonContent);
 
         assertThat(userDto).isNotNull();
         assertThat(userDto.getId()).isEqualTo(USER_ID);

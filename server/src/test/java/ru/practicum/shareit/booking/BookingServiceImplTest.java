@@ -114,5 +114,4 @@ class BookingServiceImplTest {
         assertEquals(1, responseList.size());
     }
 
-
 }

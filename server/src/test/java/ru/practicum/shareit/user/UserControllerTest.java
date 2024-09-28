@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.user.controller.UserController;
-import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -31,11 +31,11 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private UserDTO userDto;
+    private UserDto userDto;
 
     @BeforeEach
     void setUp() {
-        userDto = UserDTO.builder()
+        userDto = UserDto.builder()
                 .id(1L)
                 .name("Oleg Gazmanov")
                 .email("vpole.skonem@viydu.ru")
@@ -60,7 +60,7 @@ class UserControllerTest {
     @Test
     @SneakyThrows
     void updateUserUpdatedSuccessfully() {
-        UserDTO userUpdateDto = UserDTO.builder()
+        UserDto userUpdateDto = UserDto.builder()
                 .name("Oleg Gazmanov Updated")
                 .build();
         userDto.setName("Oleg Gazmanov Updated");

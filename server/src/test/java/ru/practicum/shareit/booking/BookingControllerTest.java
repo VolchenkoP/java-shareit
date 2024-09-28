@@ -14,7 +14,7 @@ import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.dto.ItemDTO;
-import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,13 +39,13 @@ class BookingControllerTest {
     @MockBean
     private BookingService bookingService;
 
-    private UserDTO user;
+    private UserDto user;
     private BookingRequestDto bookingRequestDto;
     private BookingResponseDto responseDto;
 
     @BeforeEach
     void setUp() {
-        user = UserDTO.builder()
+        user = UserDto.builder()
                 .id(1L)
                 .name("John Doe")
                 .email("j.doe@mail.ru")

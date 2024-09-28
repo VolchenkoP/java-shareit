@@ -1,61 +1,117 @@
 package ru.practicum.shareit.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.service.UserServiceImpl;
+import ru.practicum.shareit.user.service.UserService;
 
-import java.util.Optional;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+@Transactional
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class UserServiceImplTest {
+    private final EntityManager em;
+    private final UserService service;
+    private final UserMapper mapper;
 
-    private ObjectMapper objectMapper;
+    @Test
+    @DisplayName(value = "Получение пользователя по ИД")
+    void getUserByIdTest() {
+        UserDto userDto = makeUserDto("User", "some@email.com");
+        UserDto savedUserDto = service.create(userDto);
 
-    @Mock
-    private UserRepository userRepository;
+        UserDto result = service.findUserById(savedUserDto.getId());
 
-    @Mock
-    private UserMapper userMapper;
-
-    @InjectMocks
-    private UserServiceImpl userService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        objectMapper = new ObjectMapper();
-
-        // Настройка мока для findByEmail
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-
-        // Настройка мока для save
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-            User user = invocation.getArgument(0);
-            user.setId(1L); // Предполагаем, что ID должен быть установлено
-            return user;
-        });
-
+        assertThat(result, notNullValue());
+        assertThat(result.getId(), equalTo(savedUserDto.getId()));
+        assertThat(result.getName(), equalTo(userDto.getName()));
+        assertThat(result.getEmail(), equalTo(userDto.getEmail()));
     }
 
     @Test
-    void testUserExistById() {
-        // Arrange
-        Long userId = 1L;
-        when(userRepository.existsById(anyLong())).thenReturn(true);
+    @DisplayName(value = "Добавление пользователя")
+    void addUserTest() {
+        UserDto userDto = makeUserDto("User", "some@email.com");
+        service.create(userDto);
 
-        // Act & Assert
-        userService.userExistById(userId);
+        TypedQuery<User> query = em.createQuery("Select u from User u where u.email = :email", User.class);
+        User user = query.setParameter("email", userDto.getEmail())
+                .getSingleResult();
 
-        verify(userRepository).existsById(userId);
+        assertThat(user.getId(), notNullValue());
+        assertThat(user.getName(), equalTo(userDto.getName()));
+        assertThat(user.getEmail(), equalTo(userDto.getEmail()));
+    }
+
+    @Test
+    @DisplayName(value = "Успешное обновление почты пользователя")
+    void updateEmailForUserTest() {
+        UserDto userDto = makeUserDto("User", "some@email.com");
+        UserDto savedUserDto = service.create(userDto);
+        String newEmail = "another@email.com";
+        UserDto userUpdateDto = UserDto.builder()
+                .email(newEmail)
+                .name("User")
+                .build();
+
+        service.update(savedUserDto.getId(), userUpdateDto);
+        UserDto result = service.findUserById(savedUserDto.getId());
+
+        assertThat(result, notNullValue());
+        assertThat(result.getId(), equalTo(savedUserDto.getId()));
+        assertThat(result.getName(), equalTo(userDto.getName()));
+        assertThat(result.getEmail(), equalTo(newEmail));
+    }
+
+    @Test
+    @DisplayName(value = "Удаление пользователя")
+    void deleteUserTest() {
+        UserDto userDto = makeUserDto("User", "some@email.com");
+        UserDto savedUserDto = service.create(userDto);
+        service.delete(savedUserDto.getId());
+
+        TypedQuery<User> query = em.createQuery("Select u from User u where u.email = :email", User.class);
+
+        Assertions.assertThrows(NoResultException.class, () -> query.setParameter("email", userDto.getEmail())
+                .getSingleResult());
+    }
+
+    @Test
+    @DisplayName(value = "Получение несуществующего пользователя")
+    void throwExceptionWhenGetUserByIdTest() {
+        Assertions.assertThrows(NotFoundException.class, () -> service.findUserById(999999L));
+    }
+
+    @Test
+    @DisplayName(value = "Успешная проверка существования пользователя")
+    void returnTrueForExistedUserTest() {
+        UserDto userDto = makeUserDto("User", "some@email.com");
+        UserDto savedUserDto = service.create(userDto);
+
+        assertNotNull(savedUserDto);
+    }
+
+    private UserDto makeUserDto(String name, String email) {
+        UserDto userDto = new UserDto();
+        userDto.setName(name);
+        userDto.setEmail(email);
+
+        return userDto;
     }
 }

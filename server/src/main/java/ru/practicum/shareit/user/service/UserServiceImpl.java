@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO create(UserDTO userDTO) {
+    public UserDto create(UserDto userDTO) {
         log.info("Создание нового пользователя");
         repository.findByEmail(userDTO.getEmail()).ifPresent(user -> {
             throw new RuntimeException("Пользователь с email: " + userDTO.getEmail() + "уже существует");
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findUserById(Long userDTOId) {
+    public UserDto findUserById(Long userDTOId) {
         log.info("Поиск пользователя с Id: {}", userDTOId);
         userExistById(userDTOId);
         log.info("Пользователь с  id: {} успешно найден", userDTOId);
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> findAll() {
+    public List<UserDto> findAll() {
         log.info("Поиск всех пользователей");
         return repository.findAll().stream()
                 .map(userMapper::toDTO)
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO update(Long userId, UserDTO userDTO) {
+    public UserDto update(Long userId, UserDto userDTO) {
         log.info("Обновление данных у пользователя с Id: {}", userId);
         userExistById(userId);
         User user = userMapper.toEntity(userDTO);
