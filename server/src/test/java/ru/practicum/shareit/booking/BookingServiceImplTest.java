@@ -74,7 +74,7 @@ class BookingServiceImplTest {
 
         testItem = Item.builder()
                 .id(1L)
-                .name("Item1")
+                .name("Item")
                 .description("Desc1")
                 .available(true)
                 .owner(testOwner)
