@@ -17,13 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class BookingJsonTest {
 
-    @Autowired
-    private JacksonTester<BookingRequestDto> json;
-
     private static final String DATE_TIME_START = "1999-04-06T07:33:00";
     private static final String DATE_TIME_END = "1999-04-06T07:33:00";
     private static final Long ITEM_ID = 1L;
-
+    @Autowired
+    private JacksonTester<BookingRequestDto> json;
     private BookingRequestDto bookingDto;
 
     @BeforeEach

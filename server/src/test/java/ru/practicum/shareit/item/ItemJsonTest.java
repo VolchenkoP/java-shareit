@@ -13,14 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
 public class ItemJsonTest {
-    @Autowired
-    private JacksonTester<ItemDTO> json;
-
     private final User user = User.builder()
             .id(1L)
             .name("Oleg Gazmanov")
             .email("vpole.skonem@viydu.ru")
             .build();
+    @Autowired
+    private JacksonTester<ItemDTO> json;
 
     @Test
     @SneakyThrows

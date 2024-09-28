@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +22,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ItemRequestRepositoryTest {
 
-    @Autowired
-    private ItemRequestRepository itemRequestRepository;
-
-    @Autowired
-    private ItemRepository itemRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private ItemRequest request;
-
     private final User user = User.builder()
             .id(1L)
             .name("Oleg Gazmanov")
             .email("vpole.skonem@viydu.ru")
             .build();
+    @Autowired
+    private ItemRequestRepository itemRequestRepository;
+    @Autowired
+    private ItemRepository itemRepository;
+    @Autowired
+    private UserRepository userRepository;
+    private ItemRequest request;
 
     @BeforeEach
     void setUp() {

@@ -30,21 +30,17 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ItemRequestServiceImplTest {
-    @Mock
-    ItemRequestRepository itemRequestRepository;
-
-    @Mock
-    UserRepository userRepository;
-
-    @InjectMocks
-    ItemRequestServiceImpl itemRequestService;
-
     private final User user = User.builder()
             .id(1L)
             .name("Oleg Gazmanov")
             .email("vpole.skonem@viydu.ru")
             .build();
-
+    @Mock
+    ItemRequestRepository itemRequestRepository;
+    @Mock
+    UserRepository userRepository;
+    @InjectMocks
+    ItemRequestServiceImpl itemRequestService;
     private ItemRequest request;
 
     @BeforeEach

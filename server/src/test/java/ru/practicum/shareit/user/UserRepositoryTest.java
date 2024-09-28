@@ -21,14 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UserRepositoryTest {
     @Autowired
     private final UserRepository userRepository;
-
-    @Autowired
-    private TestEntityManager testEntityManager;
-
     private final User testUser = User.builder()
             .name("Oleg Gazmanov")
             .email("vpole.skonem@viydu.ru")
             .build();
+    @Autowired
+    private TestEntityManager testEntityManager;
 
     @BeforeEach
     void setUp() {

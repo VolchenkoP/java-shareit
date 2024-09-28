@@ -26,29 +26,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ItemRequestController.class)
 class ItemRequestControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private ItemRequestService itemRequestService;
-
     private static final String BASE_URL = "/requests";
-
     private final User user = User.builder()
             .id(1L)
             .name("Oleg Gazmanov")
             .email("vpole.skonem@viydu.ru")
             .build();
-
     private final ItemRequestDto requestDto = ItemRequestDto.builder()
             .id(1L)
             .description("Description")
             .requester(user)
             .created(LocalDateTime.now())
             .build();
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @MockBean
+    private ItemRequestService itemRequestService;
 
     @Test
     @SneakyThrows
