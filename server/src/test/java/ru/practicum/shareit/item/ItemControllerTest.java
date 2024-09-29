@@ -24,9 +24,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ItemController.class)
@@ -161,7 +162,7 @@ class ItemControllerTest {
 
     @Test
     @SneakyThrows
-    void addCommentToItemwhatShouldBeReturned() {
+    void addCommentToItemWhatShouldBeReturned() {
         CommentRequestDto commentAddDto = new CommentRequestDto();
         commentAddDto.setText("comment");
         CommentResponseDto responseDto = CommentResponseDto.builder()
@@ -185,7 +186,7 @@ class ItemControllerTest {
 
     @Test
     @SneakyThrows
-    void createItemwhenErrorOccurs_whatShouldBeReturned() {
+    void createItemWhenErrorOccurs_whatShouldBeReturned() {
         ItemCreateDto itemAddDto = ItemCreateDto.builder()
                 .id(1L)
                 .name("Item1")
@@ -201,4 +202,34 @@ class ItemControllerTest {
                         .content(objectMapper.writeValueAsString(itemAddDto)))
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    void createItem_ShouldReturnItem() throws Exception {
+        when(itemService.create(anyLong(), any(ItemCreateDto.class))).thenReturn(itemDto);
+
+        mockMvc.perform(post("/items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L)
+                        .content("{\"name\": \"Test item\", \"description\": \"Test description\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(itemDto.getId())); // замените на реальные проверки
+
+        verify(itemService, times(1)).create(anyLong(), any(ItemCreateDto.class));
+    }
+
+    @Test
+    void updateItem_ShouldReturnUpdatedItem() throws Exception {
+
+        when(itemService.update(anyLong(), anyLong(), any(ItemFromUpdateRequestDto.class))).thenReturn(itemDto);
+
+        mockMvc.perform(patch("/items/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L)
+                        .content("{\"name\": \"Updated item\", \"description\": \"Updated description\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(itemDto.getId()));
+
+        verify(itemService, times(1)).update(anyLong(), anyLong(), any(ItemFromUpdateRequestDto.class));
+    }
+
 }
