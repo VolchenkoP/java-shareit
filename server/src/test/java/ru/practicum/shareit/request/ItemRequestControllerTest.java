@@ -14,7 +14,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoToAdd;
 import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -115,7 +114,7 @@ class ItemRequestControllerTest {
                 .build();
 
         // Мокаем сервис, чтобы он возвращал этот DTO
-        when(itemRequestService.addItemRequest(anyLong(),any(ItemRequestDtoToAdd.class))).thenReturn(requestDto);
+        when(itemRequestService.addItemRequest(anyLong(), any(ItemRequestDtoToAdd.class))).thenReturn(requestDto);
 
         // Отправляем POST-запрос с корректным JSON
         mockMvc.perform(post("/requests")
@@ -126,7 +125,7 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.description").value("Test request")); // проверяем поле description
 
         // Проверяем, что метод сервиса был вызван
-        verify(itemRequestService, times(1)).addItemRequest(anyLong(),any(ItemRequestDtoToAdd.class));
+        verify(itemRequestService, times(1)).addItemRequest(anyLong(), any(ItemRequestDtoToAdd.class));
     }
 
     @Test
