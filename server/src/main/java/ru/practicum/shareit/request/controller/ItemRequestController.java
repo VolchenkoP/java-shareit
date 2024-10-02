@@ -25,29 +25,30 @@ import java.util.List;
 @Slf4j
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
-    private static final String USER_HEADER = HttpHeaders.USER_HEADER;
 
     private final ItemRequestService itemRequestService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemRequestResponseDto> findAll(@RequestHeader(USER_HEADER) Long userId) {
+    public List<ItemRequestResponseDto> findAll(@RequestHeader(HttpHeaders.USER_HEADER) Long userId) {
         log.info("Получение всех запросов");
         return itemRequestService.findRequestByUserId(userId);
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemRequestDto> findAllWithParamsFromAndSize(@RequestHeader(USER_HEADER) Long userId,
-                                                             @RequestParam(defaultValue = "0") int from,
-                                                             @RequestParam(defaultValue = "20") int size) {
+    public List<ItemRequestDto> findAllWithParamsFromAndSize(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
+                                                             @RequestParam(defaultValue = "0")
+                                                             int from,
+                                                             @RequestParam(defaultValue = "20")
+                                                             int size) {
         log.info("Получение всех запросов с параметрами начального поиска: {} и в количестве: {}", from, size);
         return itemRequestService.findAllWithParamsFromAndSize(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemRequestResponseDto findItemRequestById(@RequestHeader(USER_HEADER) Long userId,
+    public ItemRequestResponseDto findItemRequestById(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                                       @PathVariable Long requestId) {
         log.info("Получение запроса по id: {}", requestId);
         return itemRequestService.findItemRequestById(userId, requestId);
@@ -55,7 +56,7 @@ public class ItemRequestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemRequestDto addItemRequest(@RequestHeader(USER_HEADER) Long userId,
+    public ItemRequestDto addItemRequest(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                          @RequestBody ItemRequestDtoToAdd itemRequestDto) {
         log.info("Добавление нового запроса");
         return itemRequestService.addItemRequest(userId, itemRequestDto);

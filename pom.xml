@@ -18,7 +18,28 @@
 
     <properties>
         <java.version>21</java.version>
+        <commons-lang.version>3.14.0</commons-lang.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <mapstruct-processor.version>1.5.3.Final</mapstruct-processor.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct-processor.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <modules>
         <module>gateway</module>

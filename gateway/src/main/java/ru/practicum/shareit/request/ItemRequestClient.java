@@ -15,13 +15,13 @@ import java.util.Map;
 
 @Service
 public class ItemRequestClient extends BaseClient {
-    private static final String API_PREFIX = ApiConstants.REQUEST_API_PREFIX;
 
     @Autowired
     public ItemRequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl +
+                                ApiConstants.REQUEST_API_PREFIX))
                         .requestFactory(() -> new HttpComponentsClientHttpRequestFactory())
                         .build()
         );

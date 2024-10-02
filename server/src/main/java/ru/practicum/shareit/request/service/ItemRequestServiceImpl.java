@@ -30,17 +30,18 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
+    private final ItemRequestMapper itemRequestMapper;
 
     @Override
     @Transactional
     public ItemRequestDto addItemRequest(Long userId, ItemRequestDtoToAdd itemRequestDtoToAdd) {
         User user = getUserById(userId);
-        ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoToAdd);
+        ItemRequest request = itemRequestMapper.toItemRequest(itemRequestDtoToAdd);
         request.setRequester(user);
         request.setCreated(LocalDateTime.now());
         ItemRequest createdItemRequest = itemRequestRepository.save(request);
         log.info("Запрос успешно добавлен с id: {}", createdItemRequest.getId());
-        return ItemRequestMapper.toItemRequestDto(createdItemRequest);
+        return itemRequestMapper.toItemRequestDto(createdItemRequest);
 
     }
 
@@ -49,17 +50,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         getUserById(userId);
         List<ItemRequest> itemRequests = itemRequestRepository.findByRequesterIdOrderByCreatedDesc(userId);
         log.info("Все запросы для пользователь с id: {} успешно найдены", userId);
-        return ItemRequestMapper.toItemRequestResponseDtos(itemRequests);
+        return itemRequestMapper.toItemRequestResponseDtos(itemRequests);
     }
 
     @Override
     public List<ItemRequestDto> findAllWithParamsFromAndSize(Long userId, int from, int size) {
-        if (size <= 0) {
-            throw new IllegalArgumentException("Размер списка должен быть больше 0");
-        }
-        if (from <= 0) {
-            throw new IllegalArgumentException("Отсчет должен бначинаться не с 0");
-        }
         getUserById(userId);
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "created"));
         Page<ItemRequest> itemRequestPage = itemRequestRepository.findAll(pageRequest);
@@ -68,7 +63,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
         log.info("Запрашиваемая информация успешно найдена");
         return itemRequestPage.getContent().stream()
-                .map(ItemRequestMapper::toItemRequestDto)
+                .map(itemRequestMapper::toItemRequestDto)
                 .toList();
     }
 
@@ -77,7 +72,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         getUserById(userId);
         ItemRequest request = itemRequestRepository.findById(requestId).orElseThrow(() ->
                 new NotFoundException("Запрос с id: " + requestId + " не найден"));
-        return ItemRequestMapper.toItemRequestResponseDto(request);
+        return itemRequestMapper.toItemRequestResponseDto(request);
     }
 
     private User getUserById(Long userId) {

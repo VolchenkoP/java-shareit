@@ -25,19 +25,18 @@ import ru.practicum.shareit.item.dto.ItemFromUpdateRequestDto;
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
-    private static final String HEADER = HttpHeaders.USER_HEADER;
     private final ItemClient itemClient;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> findItemsByUser(@RequestHeader(HEADER) Long userId) {
+    public ResponseEntity<Object> findItemsByUser(@RequestHeader(HttpHeaders.USER_HEADER) Long userId) {
         log.info("Получение всех объектов проката по id: {} пользователя", userId);
         return itemClient.findItemsByUser(userId);
     }
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> findItemById(@RequestHeader(HEADER) Long userId,
+    public ResponseEntity<Object> findItemById(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                                @PathVariable Long itemId) {
         log.info("Получение объекта проката по id: {}", itemId);
         return itemClient.findItemById(itemId, userId);
@@ -52,7 +51,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> create(@RequestHeader(HEADER) Long userId,
+    public ResponseEntity<Object> create(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                          @Valid @RequestBody ItemDto itemDTO) {
         log.info("Создание нового объекта проката пользователем с id: {}", userId);
         return itemClient.create(userId, itemDTO);
@@ -60,7 +59,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> addComment(@RequestHeader(HEADER) Long userId,
+    public ResponseEntity<Object> addComment(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                              @PathVariable Long itemId,
                                              @Valid @RequestBody CommentRequestDto requestDto) {
         log.info("Добавление комментария к объекту проката с id: {} пользователем с id: {}", itemId, userId);
@@ -69,7 +68,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> update(@RequestHeader(HEADER) Long userId,
+    public ResponseEntity<Object> update(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                          @PathVariable Long itemId, // mb int
                                          @RequestBody ItemFromUpdateRequestDto itemDTO) {
         log.info("Обновление объекта проката с id: {} пользователем с id: {}", itemId, userId);

@@ -16,12 +16,12 @@ import java.util.Map;
 
 @Service
 public class ItemClient extends BaseClient {
-    private static final String API_PREFIX = ApiConstants.ITEMS_API_PREFIX;
 
     public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl
+                                + ApiConstants.ITEMS_API_PREFIX))
                         .requestFactory(() -> new HttpComponentsClientHttpRequestFactory())
                         .build()
         );

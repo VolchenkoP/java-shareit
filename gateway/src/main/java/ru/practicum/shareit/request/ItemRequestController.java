@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,12 +24,11 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoToAdd;
 @Slf4j
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
-    private static final String HEADER = HttpHeaders.USER_HEADER;
     private final ItemRequestClient requestClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> addItemRequest(@RequestHeader(HEADER) Long userId,
+    public ResponseEntity<Object> addItemRequest(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                                  @Valid @RequestBody ItemRequestDtoToAdd itemRequestAddDto) {
         log.info("Добавление нового запроса: {}, пользователем с id: {}", itemRequestAddDto, userId);
         return requestClient.addItemRequest(userId, itemRequestAddDto);
@@ -35,23 +36,25 @@ public class ItemRequestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> getItemRequests(@RequestHeader(HEADER) Long userId) {
+    public ResponseEntity<Object> getItemRequests(@RequestHeader(HttpHeaders.USER_HEADER) Long userId) {
         log.info("Поиск всех запросов пользователя с id: {}", userId);
         return requestClient.getItemRequests(userId);
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> getAllItemRequests(@RequestHeader(HEADER) Long userId,
-                                                     @RequestParam(defaultValue = "0") int from,
-                                                     @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Object> getAllItemRequests(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
+                                                     @RequestParam(defaultValue = "0")
+                                                     @PositiveOrZero int from,
+                                                     @RequestParam(defaultValue = "20")
+                                                     @Positive int size) {
         log.info("Поиск всех запросов с параметрами начала: {} и количества: {}", from, size);
         return requestClient.getAllItemRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> getItemRequest(@RequestHeader(HEADER) Long userId,
+    public ResponseEntity<Object> getItemRequest(@RequestHeader(HttpHeaders.USER_HEADER) Long userId,
                                                  @PathVariable Long requestId) {
         log.info("Получение запроса с id: {}", requestId);
         return requestClient.getItemRequest(userId, requestId);
