@@ -5,7 +5,6 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +30,6 @@ class UserServiceImplTest {
     private final UserMapper mapper;
 
     @Test
-    @DisplayName(value = "Получение пользователя по ИД")
     void getUserByIdTest() {
         UserDto userDto = makeUserDto("User", "some@email.com");
         UserDto savedUserDto = service.create(userDto);
@@ -45,7 +43,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Добавление пользователя")
     void addUserTest() {
         UserDto userDto = makeUserDto("User", "some@email.com");
         service.create(userDto);
@@ -60,7 +57,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Успешное обновление почты пользователя")
     void updateEmailForUserTest() {
         UserDto userDto = makeUserDto("User", "some@email.com");
         UserDto savedUserDto = service.create(userDto);
@@ -80,7 +76,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Удаление пользователя")
     void deleteUserTest() {
         UserDto userDto = makeUserDto("User", "some@email.com");
         UserDto savedUserDto = service.create(userDto);
@@ -93,13 +88,11 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Получение несуществующего пользователя")
     void throwExceptionWhenGetUserByIdTest() {
         Assertions.assertThrows(NotFoundException.class, () -> service.findUserById(999999L));
     }
 
     @Test
-    @DisplayName(value = "Успешная проверка существования пользователя")
     void returnTrueForExistedUserTest() {
         UserDto userDto = makeUserDto("User", "some@email.com");
         UserDto savedUserDto = service.create(userDto);

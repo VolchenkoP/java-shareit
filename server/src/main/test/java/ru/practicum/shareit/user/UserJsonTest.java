@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserJsonTest {
 
     private static final Long USER_ID = 1L;
-    private static final String USER_NAME = "Oleg Gazmanov";
-    private static final String USER_EMAIL = "vpole.skonem@viydu.ru";
+    private static final String USER_NAME = "John Doe";
+    private static final String USER_EMAIL = "john@doe.ru";
     @Autowired
     private JacksonTester<UserDto> json;
 
@@ -67,7 +67,7 @@ class UserJsonTest {
     @Test
     @SneakyThrows
     void userDtoDeserialize() {
-        String jsonContent = "{\"id\":1,\"name\":\"Oleg Gazmanov\",\"email\":\"vpole.skonem@viydu.ru\"}";
+        String jsonContent = "{\"id\":1,\"name\":\"John Doe\",\"email\":\"john@doe.ru\"}";
         UserDto userDto = json.parseObject(jsonContent);
 
         assertThat(userDto).isNotNull();

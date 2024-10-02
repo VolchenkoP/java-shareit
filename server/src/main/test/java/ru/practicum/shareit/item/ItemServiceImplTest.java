@@ -37,8 +37,8 @@ import static org.mockito.quality.Strictness.LENIENT;
 class ItemServiceImplTest {
     private final User owner = User.builder()
             .id(1L)
-            .name("Oleg Gazmanov")
-            .email("vpole.skonem@viydu.ru")
+            .name("John Doe")
+            .email("john@doe.ru")
             .build();
     @Mock
     ItemRepository itemRepository;
@@ -87,8 +87,8 @@ class ItemServiceImplTest {
     void addCommentToItemShouldThrowNotAvailableException() {
         User user = User.builder()
                 .id(2L)
-                .name("Oleg Gazmanov")
-                .email("vpole.skonem@viydu.ru")
+                .name("John Doe")
+                .email("john@doe.ru")
                 .build();
 
         when(itemRepository.findById(item1.getId())).thenReturn(Optional.of(item1));

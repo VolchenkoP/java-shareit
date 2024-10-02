@@ -24,8 +24,8 @@ class ItemRequestRepositoryTest {
 
     private final User user = User.builder()
             .id(1L)
-            .name("Oleg Gazmanov")
-            .email("vpole.skonem@viydu.ru")
+            .name("John Doe")
+            .email("john@doe.ru")
             .build();
     @Autowired
     private ItemRequestRepository itemRequestRepository;

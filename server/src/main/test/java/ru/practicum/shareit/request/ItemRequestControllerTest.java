@@ -31,8 +31,8 @@ class ItemRequestControllerTest {
     private static final String BASE_URL = "/requests";
     private final User user = User.builder()
             .id(1L)
-            .name("Oleg Gazmanov")
-            .email("vpole.skonem@viydu.ru")
+            .name("Jane Doe")
+            .email("jane@doe.ru")
             .build();
     private final ItemRequestDto requestDto = ItemRequestDto.builder()
             .id(1L)
@@ -107,30 +107,27 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void addRequest_ShouldReturnItemRequest() throws Exception {
-        // Создаем DTO с заполненным полем
+    void addRequestShouldReturnItemRequest() throws Exception {
         ItemRequestDto requestDto = ItemRequestDto.builder()
                 .description("Test request")
                 .build();
 
-        // Мокаем сервис, чтобы он возвращал этот DTO
         when(itemRequestService.addItemRequest(anyLong(), any(ItemRequestDtoToAdd.class))).thenReturn(requestDto);
 
-        // Отправляем POST-запрос с корректным JSON
         mockMvc.perform(post("/requests")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Sharer-User-Id", 1L)
-                        .content("{\"description\": \"Test request\"}")) // замените на правильный JSON
+                        .content("{\"description\": \"Test request\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.description").value("Test request")); // проверяем поле description
+                .andExpect(jsonPath("$.description").value("Test request"));
 
-        // Проверяем, что метод сервиса был вызван
-        verify(itemRequestService, times(1)).addItemRequest(anyLong(), any(ItemRequestDtoToAdd.class));
+        verify(itemRequestService, times(1)).addItemRequest(anyLong(),
+                any(ItemRequestDtoToAdd.class));
     }
 
     @Test
-    void getRequests_ShouldReturnListOfRequests() throws Exception {
-        List<ItemRequestResponseDto> requests = List.of(new ItemRequestResponseDto()); // создайте список
+    void getRequestsShouldReturnListOfRequests() throws Exception {
+        List<ItemRequestResponseDto> requests = List.of(new ItemRequestResponseDto());
 
         when(itemRequestService.findRequestByUserId(anyLong())).thenReturn(requests);
 
@@ -143,8 +140,8 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void getAllOthersRequests_ShouldReturnListOfRequests() throws Exception {
-        List<ItemRequestDto> requests = List.of(ItemRequestDto.builder().build()); // создайте список
+    void getAllOthersRequestsShouldReturnListOfRequests() throws Exception {
+        List<ItemRequestDto> requests = List.of(ItemRequestDto.builder().build());
 
         when(itemRequestService.findAllWithParamsFromAndSize(anyLong(), anyInt(), anyInt())).thenReturn(requests);
 

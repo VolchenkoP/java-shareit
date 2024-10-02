@@ -49,8 +49,8 @@ class ItemControllerTest {
     void setUp() {
         owner = User.builder()
                 .id(1L)
-                .name("Oleg Gazmanov")
-                .email("vpole.skonem@viydu.ru")
+                .name("John Doe")
+                .email("john@doe.ru")
                 .build();
 
         itemDto = ItemDTO.builder()
@@ -147,7 +147,7 @@ class ItemControllerTest {
 
     @Test
     @SneakyThrows
-    void searchItemsByTextwhatShouldBeReturned() {
+    void searchItemsByTextWhatShouldBeReturned() {
         when(itemService.findItemsByText(anyString())).thenReturn(List.of(itemDto));
 
         String result = mockMvc.perform(get("/items/search")
@@ -186,7 +186,7 @@ class ItemControllerTest {
 
     @Test
     @SneakyThrows
-    void createItemWhenErrorOccurs_whatShouldBeReturned() {
+    void createItemWhenErrorOccursWhatShouldBeReturned() {
         ItemCreateDto itemAddDto = ItemCreateDto.builder()
                 .id(1L)
                 .name("Item1")
@@ -204,7 +204,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void createItem_ShouldReturnItem() throws Exception {
+    void createItemShouldReturnItem() throws Exception {
         when(itemService.create(anyLong(), any(ItemCreateDto.class))).thenReturn(itemDto);
 
         mockMvc.perform(post("/items")
@@ -218,7 +218,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void updateItem_ShouldReturnUpdatedItem() throws Exception {
+    void updateItemShouldReturnUpdatedItem() throws Exception {
 
         when(itemService.update(anyLong(), anyLong(), any(ItemFromUpdateRequestDto.class))).thenReturn(itemDto);
 
@@ -229,7 +229,8 @@ class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(itemDto.getId()));
 
-        verify(itemService, times(1)).update(anyLong(), anyLong(), any(ItemFromUpdateRequestDto.class));
+        verify(itemService, times(1)).update(anyLong(), anyLong(),
+                any(ItemFromUpdateRequestDto.class));
     }
 
 }

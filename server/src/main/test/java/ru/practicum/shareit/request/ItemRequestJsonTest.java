@@ -46,6 +46,7 @@ public class ItemRequestJsonTest {
         assertThat(content).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(content).extractingJsonPathStringValue("$.description").isEqualTo("description");
         assertThat(content).extractingJsonPathStringValue("$.requester.name").isEqualTo("John Doe");
-        assertThat(content).extractingJsonPathStringValue("$.requester.email").isEqualTo("JD.scrubs@turk.ru");
+        assertThat(content).extractingJsonPathStringValue("$.requester.email")
+                .isEqualTo("JD.scrubs@turk.ru");
     }
 }

@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ItemJsonTest {
     private final User user = User.builder()
             .id(1L)
-            .name("Oleg Gazmanov")
-            .email("vpole.skonem@viydu.ru")
+            .name("John Doe")
+            .email("john@doe.ru")
             .build();
     @Autowired
     private JacksonTester<ItemDTO> json;
@@ -51,7 +51,9 @@ public class ItemJsonTest {
     @Test
     @SneakyThrows
     void deserializeItemDtocorrectlyDeserialized() {
-        String jsonString = "{\"id\":1,\"name\":\"Item\",\"description\":\"Description\",\"available\":true,\"owner\":{\"id\":1,\"name\":\"Oleg Gazmanov\",\"email\":\"vpole.skonem@viydu.ru\"},\"request\":null}";
+        String jsonString = "{\"id\":1,\"name\":\"Item\",\"description\":\"Description\"," +
+                "\"available\":true,\"owner\":{\"id\":1,\"name\":\"John Doe\"," +
+                "\"email\":\"john@doe.ru\"},\"request\":null}";
 
         ItemDTO itemDto = json.parseObject(jsonString);
 

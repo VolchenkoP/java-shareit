@@ -37,8 +37,8 @@ class UserControllerTest {
     void setUp() {
         userDto = UserDto.builder()
                 .id(1L)
-                .name("Oleg Gazmanov")
-                .email("vpole.skonem@viydu.ru")
+                .name("John Doe")
+                .email("john@doe.ru")
                 .build();
     }
 
@@ -61,9 +61,9 @@ class UserControllerTest {
     @SneakyThrows
     void updateUserUpdatedSuccessfully() {
         UserDto userUpdateDto = UserDto.builder()
-                .name("Oleg Gazmanov Updated")
+                .name("John Doe Updated")
                 .build();
-        userDto.setName("Oleg Gazmanov Updated");
+        userDto.setName("John Doe Updated");
         when(userService.update(userDto.getId(), userUpdateDto)).thenReturn(userDto);
         String result = mockMvc.perform(patch("/users/{id}", userDto.getId())
                         .contentType("application/json")

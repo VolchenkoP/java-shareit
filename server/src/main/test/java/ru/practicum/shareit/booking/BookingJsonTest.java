@@ -60,7 +60,8 @@ class BookingJsonTest {
     @Test
     @SneakyThrows
     void deserializesCorrectly() {
-        String content = "{ \"itemId\": " + ITEM_ID + ", \"start\": \"" + DATE_TIME_START + "\", \"end\": \"" + DATE_TIME_END + "\" }";
+        String content = "{ \"itemId\": " + ITEM_ID + ", \"start\": \"" + DATE_TIME_START
+                + "\", \"end\": \"" + DATE_TIME_END + "\" }";
         BookingRequestDto deserializedDto = json.parse(content).getObject();
         assertThat(deserializedDto.getItemId()).isEqualTo(ITEM_ID);
         assertThat(deserializedDto.getStart()).isEqualTo(LocalDateTime.parse(DATE_TIME_START));

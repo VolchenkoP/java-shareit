@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ItemRequestServiceImpl implements ItemRequestService {
@@ -36,7 +38,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         ItemRequest request = ItemRequestMapper.toItemRequest(itemRequestDtoToAdd);
         request.setRequester(user);
         request.setCreated(LocalDateTime.now());
-        return ItemRequestMapper.toItemRequestDto(itemRequestRepository.save(request));
+        ItemRequest createdItemRequest = itemRequestRepository.save(request);
+        log.info("Запрос успешно добавлен с id: {}", createdItemRequest.getId());
+        return ItemRequestMapper.toItemRequestDto(createdItemRequest);
 
     }
 
@@ -44,6 +48,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestResponseDto> findRequestByUserId(Long userId) {
         getUserById(userId);
         List<ItemRequest> itemRequests = itemRequestRepository.findByRequesterIdOrderByCreatedDesc(userId);
+        log.info("Все запросы для пользователь с id: {} успешно найдены", userId);
         return ItemRequestMapper.toItemRequestResponseDtos(itemRequests);
     }
 
@@ -61,6 +66,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (itemRequestPage.isEmpty()) {
             return Collections.emptyList();
         }
+        log.info("Запрашиваемая информация успешно найдена");
         return itemRequestPage.getContent().stream()
                 .map(ItemRequestMapper::toItemRequestDto)
                 .toList();

@@ -22,8 +22,8 @@ class UserRepositoryTest {
     @Autowired
     private final UserRepository userRepository;
     private final User testUser = User.builder()
-            .name("Oleg Gazmanov")
-            .email("vpole.skonem@viydu.ru")
+            .name("John Doe")
+            .email("john@doe.ru")
             .build();
     @Autowired
     private TestEntityManager testEntityManager;
@@ -41,7 +41,7 @@ class UserRepositoryTest {
 
     @Test
     void whenFindByEmailThenReturnUser() {
-        Optional<User> foundUser = userRepository.findByEmail("vpole.skonem@viydu.ru");
+        Optional<User> foundUser = userRepository.findByEmail("john@doe.ru");
         assertEquals(testUser, foundUser.orElse(null));
     }
 }

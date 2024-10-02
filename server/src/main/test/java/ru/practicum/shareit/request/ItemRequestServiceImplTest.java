@@ -3,7 +3,6 @@ package ru.practicum.shareit.request.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +31,6 @@ class ItemRequestServiceImplTest {
     private final UserService userService;
 
     @Test
-    @DisplayName(value = "Добавление запроса на позицию")
     void addItemRequestTest() {
         ItemRequestDtoToAdd itemRequestDto = new ItemRequestDtoToAdd();
         itemRequestDto.setDescription("desc");
@@ -42,7 +40,8 @@ class ItemRequestServiceImplTest {
                 .build());
         ItemRequestDto result = service.addItemRequest(userDto.getId(), itemRequestDto);
 
-        TypedQuery<ItemRequest> query = em.createQuery("Select u from ItemRequest u where u.id = :id", ItemRequest.class);
+        TypedQuery<ItemRequest> query = em.createQuery("Select u from ItemRequest u where u.id = :id",
+                ItemRequest.class);
         ItemRequest itemRequest = query.setParameter("id", result.getId())
                 .getSingleResult();
 
@@ -52,7 +51,6 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Получение всех запросов")
     void getAllItemRequestsTest() {
         UserDto userDto = userService.create(UserDto.builder()
                 .name("user")
@@ -73,8 +71,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Получение запросов по ид пользователя")
-    void getItemRequestsByRequestorIdTest() {
+    void getItemRequestsByRequesterIdTest() {
         UserDto userDto = userService.create(UserDto.builder()
                 .name("user")
                 .email("user@mail.ru")
@@ -100,7 +97,6 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "Получение отдельного запроса ИД")
     void getItemRequestByIdTest() {
         UserDto userDto = userService.create(UserDto.builder()
                 .name("user")

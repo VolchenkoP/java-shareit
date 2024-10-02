@@ -30,8 +30,8 @@ class ItemRepositoryTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .name("Oleg Gazmanov")
-                .email("vpole.skonem@viydu.ru")
+                .name("John Doe")
+                .email("john@doe.ru")
                 .build();
         user = userRepository.save(user);
 
