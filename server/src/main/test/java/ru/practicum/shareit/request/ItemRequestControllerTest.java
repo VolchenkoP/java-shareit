@@ -57,7 +57,7 @@ class ItemRequestControllerTest {
                         .contentType("application/json")
                         .header(HttpHeaders.USER_HEADER, String.valueOf(user.getId()))
                         .content(objectMapper.writeValueAsString(addDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(requestDto)));
     }
 
@@ -118,7 +118,7 @@ class ItemRequestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Sharer-User-Id", 1L)
                         .content("{\"description\": \"Test request\"}"))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.description").value("Test request"));
 
         verify(itemRequestService, times(1)).addItemRequest(anyLong(),
